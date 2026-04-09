@@ -20,7 +20,7 @@
                 if (!response.ok) {
                     throw new Error(`レスポンスステータス: ${response.status}`);
                 }
-                document.getElementById("test").innerText = JSON.stringify(response.json());
+                document.getElementById("test").innerText = await response.text();
             } catch (error) {
                 console.error(error.message);
             }
