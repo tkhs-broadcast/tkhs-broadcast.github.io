@@ -23,25 +23,6 @@
     </main>
 
     {% include footer.html %}
-
-
-    <script>
-        let test;
-        async function getData() {
-            const url = "https://script.google.com/macros/s/AKfycbxkzEqWv8vVUqpy-XBXJpj9pbKHuMKn2ndRSaPZ9aaJkizuFRcVSQjTTfBQWbW6nXv05Q/exec?type=test";
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`レスポンスステータス: ${response.status}`);
-                }
-                console.log(await response.text());
-            } catch (error) {
-                console.error(error.message);
-            }
-        }
-        window.onload = () => getData();
-    </script>
-    
 </body>
 
 
