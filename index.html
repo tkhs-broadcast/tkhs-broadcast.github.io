@@ -2,15 +2,26 @@
 <html>
 
 <head>
-    <base target="_top">
-    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
-    <style>
-    </style>
+    {% include head.html %}
 </head>
 
 <body>
-    <?!= include('header'); ?>
-    <p id="test"></p>
+    {% include header.html %}
+
+    <main style="padding-top: 0;">
+        <header style="padding-bottom: 0;">
+            <h1>生徒会放送局 備品借用ポータル</h1>
+            <p>
+                <a href="https://tkhs-broadcast.github.io/new.html"><i>新規申請</i></a>
+                <a href="https://tkhs-broadcast.github.io/check.html"><i>申請確認</i></a>
+                <a href="https://tkhs-broadcast.github.io/list.html"><i>備品一覧</i></a>
+            </p>
+        </header>
+    </main>
+
+    {% include footer.html %}
+
+
     <script>
         let test;
         async function getData() {
@@ -20,13 +31,14 @@
                 if (!response.ok) {
                     throw new Error(`レスポンスステータス: ${response.status}`);
                 }
-                document.getElementById("test").innerText = await response.text();
+                console.log(await response.text());
             } catch (error) {
                 console.error(error.message);
             }
         }
         window.onload = () => getData();
     </script>
+    
 </body>
 
 </html>
