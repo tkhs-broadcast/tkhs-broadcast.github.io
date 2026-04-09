@@ -10,6 +10,7 @@
 
 <body>
     <?!= include('header'); ?>
+    <p id="test"></p>
     <script>
         let test;
         async function getData() {
@@ -19,7 +20,7 @@
                 if (!response.ok) {
                     throw new Error(`レスポンスステータス: ${response.status}`);
                 }
-                test = response;
+                document.getElementById("test").innerText = JSON.stringify(response.json());
             } catch (error) {
                 console.error(error.message);
             }
