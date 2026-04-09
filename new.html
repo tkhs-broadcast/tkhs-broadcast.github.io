@@ -1,0 +1,190 @@
+---
+---
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% include head.html %}
+</head>
+
+<body>
+    {% include header.html %}
+
+
+    <script>
+        let items = JSON.parse(<?= getAvailableItems() ?>)
+        // for debug
+        // let items = [["CAM01", "AX-700", "カメラ"], ["CAM02", "AX-45", "カメラ"], ["CAM03", "E235", "カメラ"], ["0004", "テスト4", "スピーカー"]]
+
+        function listupdate() {
+            let ilist = !!ge("lenditems").value ? JSON.parse(ge("lenditems").value) : [];
+            ge("listtablebody").innerHTML = "";
+
+            ilist.forEach(e => {
+                ge("listtablebody").innerHTML += `<tr><td>${e[0]}</td><td>${items[items.findIndex(ie => ie[0] == e[0])][1]}</td><td>${e[1]}</td></tr>`;
+            });
+        }
+
+        function opendialog() {
+            listupdate();
+            if (
+                !ge("lenditems").value ||
+                !ge("username").value ||
+                !ge("picharge").value ||
+                !ge("address").value ||
+                !ge("groupname").value ||
+                !ge("homeroom").value ||
+                !ge("lendd").value ||
+                !ge("returnd").value
+            ) {
+                ge("checkpopup").hidePopover();
+                alert("入力が不十分です！")
+            } else {
+                ge("checkpopup").showPopover();
+            }
+            ge("d-username").innerText = ge("username").value;
+            ge("d-picharge").innerText = ge("picharge").value;
+            ge("d-address").innerText = ge("address").value;
+            ge("d-groupname").innerText = ge("groupname").value;
+            ge("d-homeroom").innerText = ge("homeroom").value;
+            ge("d-lendd").innerText = ge("lendd").value;
+            ge("d-returnd").innerText = ge("returnd").value;
+
+            ge("dialoglisttablebody").innerHTML = ge("listtablebody").innerHTML;
+        }
+
+        function form_submit() {
+            google.script.run.withSuccessHandler(_ => {
+                alert("送信されました！")
+            }).doReq([
+                ge("username").value,
+                ge("picharge").value,
+                ge("address").value,
+                ge("groupname").value,
+                ge("homeroom").value,
+                ge("lendd").value,
+                ge("returnd").value,
+                JSON.parse(ge("lenditems").value)
+            ])
+        }
+    </script>
+
+    <main style="padding-top: 0;">
+        <header style="padding-bottom: 0;">
+            <h1>生徒会放送局 備品借用ポータル</h1>
+            <h2>新規申請フォーム</h2>
+        </header>
+        <section>
+            <form>
+                <label for="username">
+                    使用者
+                    <input type="text" name="username" id="username">
+                </label>
+                <label for="picharge">
+                    責任者
+                    <input type="text" name="picharge" id="picharge">
+                </label>
+                <label for="address">
+                    連絡先(######@tohkatsu.jpの形式)
+                    <input type="text" name="address" id="address">
+                </label>
+                <label for="groupname">
+                    団体名
+                    <input type="text" name="groupname" id="groupname">
+                </label>
+                <label for="homeroom">
+                    HR
+                    <input type="text" name="homeroom" id="homeroom">
+                </label>
+                <label for="lendd">
+                    借用開始日
+                    <input type="date" name="lendd" id="lendd">
+                </label>
+                <label for="returnd">
+                    返却日
+                    <input type="date" name="returnd" id="returnd">
+                </label>
+                <label for="lenditems">
+                    借用リスト(<a
+                        href="https://script.google.com/macros/s/AKfycbxkzEqWv8vVUqpy-XBXJpj9pbKHuMKn2ndRSaPZ9aaJkizuFRcVSQjTTfBQWbW6nXv05Q/exec?type=make">作成</a>)
+                    <input type="text" name="lenditems" id="lenditems" onchange="listupdate()">
+                </label>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>備品ID</th>
+                            <th>備品名</th>
+                            <th>用途</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listtablebody">
+                    </tbody>
+                </table>
+            </form>
+            <p></p>
+            <button onclick="opendialog()">確認</button>
+            <dialog popover id="checkpopup">
+                <h3><span style="color: red;">まだ送信されていません！</span><br>以下の内容で送信しますか？</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>入力項目</th>
+                            <th>内容</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>使用者</td>
+                            <td id="d-username"></td>
+                        </tr>
+                        <tr>
+                            <td>責任者</td>
+                            <td id="d-picharge"></td>
+                        </tr>
+                        <tr>
+                            <td>連絡先</td>
+                            <td id="d-address"></td>
+                        </tr>
+                        <tr>
+                            <td>団体名</td>
+                            <td id="d-groupname"></td>
+                        </tr>
+                        <tr>
+                            <td>HR</td>
+                            <td id="d-homeroom"></td>
+                        </tr>
+                        <tr>
+                            <td>借用開始日</td>
+                            <td id="d-lendd"></td>
+                        </tr>
+                        <tr>
+                            <td>返却日</td>
+                            <td id="d-returnd"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>備品ID</th>
+                            <th>備品名</th>
+                            <th>用途</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dialoglisttablebody">
+                    </tbody>
+                </table>
+                <p></p>
+                <button onclick="form_submit()">送信</button>
+            </dialog>
+        </section>
+    </main>
+
+
+    {% include footer.html %}
+</body>
+
+
+</html>
