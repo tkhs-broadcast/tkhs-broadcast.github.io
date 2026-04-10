@@ -18,7 +18,7 @@
         async function checkbtn() {
             //["3","test","test2","250133@tohkatsu.jp","g","hr","2026/04/07","2026/04/08","返却済","貸出許可","キャンセル済","返信済",[["6","3","CAM01","aaaa"]]];
             ge("checklink").style.display = "none";
-            let items = JSON.stringify(await getData({ "api": "showReq", "id": ge("check_id").value, "adr": ge("check_username").value }));
+            let items = JSON.parse(await getData({ "api": "showReq", "id": ge("check_id").value, "adr": ge("check_username").value }));
             if (!items || !items[3]) {
                 ge("edialog").showModal();
                 ge("checklink").style.display = "inline";
