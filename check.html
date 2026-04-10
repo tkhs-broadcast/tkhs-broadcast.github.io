@@ -1,0 +1,150 @@
+---
+---
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% include head.html %}
+</head>
+
+<body>
+    {% include header.html %}
+
+    <script>
+        function ge(id) {
+            return document.getElementById(id);
+        }
+        async function checkbtn() {
+            //["3","test","test2","250133@tohkatsu.jp","g","hr","2026/04/07","2026/04/08","返却済","貸出許可","キャンセル済","返信済",[["6","3","CAM01","aaaa"]]];
+            ge("checklink").style.display = "none";
+            let items = JSON.stringify(await getData({ "api": "showReq", "id": ge("check_id").value, "adr": ge("check_username").value }));
+            if (!items || !items[3]) {
+                ge("edialog").showModal();
+                ge("checklink").style.display = "inline";
+                return;
+            }
+
+            ge("d-username").innerText = items[1];
+            ge("d-picharge").innerText = items[2];
+            ge("d-address").innerText = items[3];
+            ge("d-groupname").innerText = items[4];
+            ge("d-homeroom").innerText = items[5];
+            ge("d-lendd").innerText = items[6];
+            ge("d-returnd").innerText = items[7];
+
+            let s = ""
+            if (items[11] == "TRUE") {
+                if (items[9] == "TRUE") {
+                    s = "許可";
+                } else {
+                    s = "拒否";
+                }
+            } else {
+                s = "確認中";
+            }
+            ge("status").innerText = s;
+
+            ge("itemlist").innerHTML = ""
+            items[12].forEach(e => {
+                ge("itemlist").innerHTML += `<tr><td>${e[1]}</td><td>${e[2]}</td><td>${e[3]}</td></tr>`
+            })
+            ge("checklink").style.display = "inline";
+            return ge("checkdialog").showModal()
+        }
+
+        function closedialog(id) {
+            ge(id).hidePopover();
+        }
+
+        window.onload = () => {
+            let param = new URLSearchParams(location.search);
+            ge("check_id").value = param.get("id") || "";
+            ge("check_username").value = param.get("user") || "";
+        }
+    </script>
+    <main style="padding-top: 0;">
+        <header style="padding-bottom: 0;">
+            <h1>申請状況確認</h1>
+        </header>
+        <section>
+            <form>
+                <label for="check_id">申請番号</label>
+                <input type="number" name="check_id" id="check_id">
+                <label for="check_username">申請時に使用した連絡先<br>(######@tohkatsu.jpの形式)</label>
+                <input type="text" name="check_username" id="check_username" placeholder="250133@tohkatsu.jp">
+                <a id="checklink" onclick="checkbtn()"><i>確認</i></a>
+            </form>
+        </section>
+        <dialog popover id="edialog">
+            <header>
+                <h1>エラー</h1>
+                <p>入力内容を確認してください。</p>
+                <button onclick="closedialog('edialog')">閉じる</button>
+            </header>
+        </dialog>
+        <dialog popover id="checkdialog">
+            <header>
+                <h2>現在の状態:<br><span id="status" style="color: red;">申請中</span></h2>
+            </header>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>入力項目</th>
+                        <th>内容</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>使用者</td>
+                        <td id="d-username"></td>
+                    </tr>
+                    <tr>
+                        <td>責任者</td>
+                        <td id="d-picharge"></td>
+                    </tr>
+                    <tr>
+                        <td>連絡先</td>
+                        <td id="d-address"></td>
+                    </tr>
+                    <tr>
+                        <td>団体名</td>
+                        <td id="d-groupname"></td>
+                    </tr>
+                    <tr>
+                        <td>HR</td>
+                        <td id="d-homeroom"></td>
+                    </tr>
+                    <tr>
+                        <td>借用開始日</td>
+                        <td id="d-lendd"></td>
+                    </tr>
+                    <tr>
+                        <td>返却予定日</td>
+                        <td id="d-returnd"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>備品ID</th>
+                        <th>備品名</th>
+                        <th>用途</th>
+                    </tr>
+                </thead>
+                <tbody id="itemlist"></tbody>
+            </table>
+            <p></p>
+            <button onclick="closedialog('checkdialog')">閉じる</button>
+        </dialog>
+    </main>
+
+
+    {% include footer.html %}
+</body>
+
+
+</html>

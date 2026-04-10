@@ -14,6 +14,9 @@
 
     <script>
         let items = {};
+        function closemodal() {
+            ge("checkpopup").hidePopover();
+        }
 
         function listupdate() {
             let ilist = !!ge("lenditems").value ? JSON.parse(ge("lenditems").value) : [];
@@ -64,8 +67,9 @@
                 "red": ge("returnd").value,
                 "itm": ge("lenditems").value
             });
+            
             if (result) {
-                alert("送信されました")
+                alert(`申請されました。あなたの申請番号は${result}番です。`)
             }
         }
 
@@ -181,7 +185,7 @@
                     </tbody>
                 </table>
                 <p></p>
-                <button onclick="form_submit()">送信</button>
+                <button onclick="closemodal()">戻る</button><button onclick="form_submit()">送信</button>
             </dialog>
         </section>
     </main>
