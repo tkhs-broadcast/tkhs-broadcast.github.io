@@ -2,9 +2,9 @@
     const url = "https://script.google.com/macros/s/AKfycbxkzEqWv8vVUqpy-XBXJpj9pbKHuMKn2ndRSaPZ9aaJkizuFRcVSQjTTfBQWbW6nXv05Q/exec";
 
     async function getData(d) {
-        let data = "";
+        let data = "?";
         for (i in d) {
-            data += `?${i}=${d[i]}`
+            data += `&${i}=${d[i]}`
         }
         try {
             const response = await fetch(url + data);
