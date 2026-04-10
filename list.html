@@ -1,0 +1,126 @@
+---
+---
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% include head.html %}
+</head>
+
+<body>
+    {% include header.html %}
+
+
+    <style>
+        .itemswrap {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .itemsflex {
+            max-width: 314px;
+        }
+    </style>
+    <?!= include('header'); ?>
+    <script>
+        function clipwrite(text) {
+            navigator.clipboard.writeText(text).then().catch(err => alert("error!"))
+        }
+        function ge(id) {
+            return document.getElementById(id);
+        }
+        function ce(ename) {
+            return document.createElement(ename);
+        }
+        async function makelist() {
+            //let items = [["CAM01", "AX-700", "カメラ", "https://m.media-amazon.com/images/I/61MOp88IPOL._AC_UF1000,1000_QL80_.jpg"], ["CAM02", "AX-45", "カメラ"], ["CAM03", "E235", "カメラ"], ["0004", "テスト4", "スピーカー"]];
+            let items = await getData({"api": "getAvailableItems"});
+            let jsonitems = {}
+            items.forEach(e => {
+                !!jsonitems[e[2]] ? jsonitems[e[2]].push([e[0], e[1], e[3]]) : jsonitems[e[2]] = [[e[0], e[1], e[3]]]
+            })
+
+            let elementContext = "";
+            for (i in jsonitems) {
+                let asides = "";
+                jsonitems[i].forEach(e => {
+                    asides += `<aside class="itemsflex">
+                        <h3><a onclick="clipwrite('${e[0]}')">${e[1]}(${e[0]})</a></h3>
+                        <img src="${e[2]}"
+                            width="100%">
+                    </aside>`
+                })
+
+                elementContext += `<details>
+                <p>
+                    <summary>${i}</summary>
+                </p>
+                <div class="itemswrap">
+                    ${asides}
+                </div>
+            </details>`
+            }
+            ge("listarea").innerHTML = elementContext;
+        }
+        window.onload = () => makelist();
+    </script>
+    <main style="padding-top: 0;">
+        <header style="padding-bottom: 0;">
+            <h1>備品一覧</h1>
+        </header>
+        <section>
+            <div style="width: 100%;">
+                <details>
+                    <p>
+                        <summary>凡例</summary>
+                    </p>
+                    <div class="itemswrap">
+                        <aside class="itemsflex">
+                            <h3><a onclick="clipwrite('備品ID')">備品名(備品ID[Click to copy])</a></h3>
+                            <img src="https://placehold.jp/3d4070/ffffff/620x470.png?text=%E7%94%BB%E5%83%8F"
+                                width="100%">
+                        </aside>
+                    </div>
+                </details>
+            </div>
+            <div style="width: 100%;" id="listarea">
+                <details>
+                    <p>
+                        <summary>カメラ</summary>
+                    </p>
+                    <div class="itemswrap">
+                        <aside class="itemsflex">
+                            <h3><a onclick="clipwrite('CAM01')">FOR-AX400(CAM01)</a></h3>
+                            <img src="">
+                        </aside>
+                        <aside>
+                            <h3><a onclick="clipwrite('CAM01')">FOR-AX400(CAM01)</a></h3>
+                            <img src="">
+                        </aside>
+                    </div>
+                </details>
+                <details>
+                    <p>
+                        <summary>カメラ</summary>
+                    </p>
+                    <div class="itemswrap">
+                        <aside class="itemsflex">
+                            <h3><a onclick="clipwrite('CAM01')">FOR-AX400(CAM01)</a></h3>
+                            <img src="">
+                        </aside>
+                        <aside>
+                            <h3><a onclick="clipwrite('CAM01')">FOR-AX400(CAM01)</a></h3>
+                            <img src="">
+                        </aside>
+                    </div>
+                </details>
+            </div>
+        </section>
+    </main>
+    {% include footer.html %}
+</body>
+
+
+</html>
