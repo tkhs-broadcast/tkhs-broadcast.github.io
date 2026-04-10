@@ -67,14 +67,14 @@
                 "red": ge("returnd").value,
                 "itm": ge("lenditems").value
             });
-            
+
             if (result) {
                 alert(`申請されました。あなたの申請番号は${result}番です。`)
             }
         }
 
         window.onload = async () => {
-            items = await getData({"api": "getAvailableItems"});
+            items = await getData({ "api": "getAvailableItems" });
         }
     </script>
 
@@ -114,8 +114,7 @@
                     <input type="date" name="returnd" id="returnd">
                 </label>
                 <label for="lenditems">
-                    借用リスト(<a
-                        href="https://script.google.com/macros/s/AKfycbxkzEqWv8vVUqpy-XBXJpj9pbKHuMKn2ndRSaPZ9aaJkizuFRcVSQjTTfBQWbW6nXv05Q/exec?type=make">作成</a>)
+                    借用リスト(<a href="https://tkhs-broadcast.github.io/make.html">作成</a>)
                     <input type="text" name="lenditems" id="lenditems" onchange="listupdate()">
                 </label>
                 <table>
