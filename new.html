@@ -13,9 +13,7 @@
 
 
     <script>
-        let items = JSON.parse(<?= getAvailableItems() ?>)
-        // for debug
-        // let items = [["CAM01", "AX-700", "カメラ"], ["CAM02", "AX-45", "カメラ"], ["CAM03", "E235", "カメラ"], ["0004", "テスト4", "スピーカー"]]
+        let items = {};
 
         function listupdate() {
             let ilist = !!ge("lenditems").value ? JSON.parse(ge("lenditems").value) : [];
@@ -54,19 +52,25 @@
             ge("dialoglisttablebody").innerHTML = ge("listtablebody").innerHTML;
         }
 
-        function form_submit() {
-            google.script.run.withSuccessHandler(_ => {
-                alert("送信されました！")
-            }).doReq([
-                ge("username").value,
-                ge("picharge").value,
-                ge("address").value,
-                ge("groupname").value,
-                ge("homeroom").value,
-                ge("lendd").value,
-                ge("returnd").value,
-                JSON.parse(ge("lenditems").value)
-            ])
+        async function form_submit() {
+            let result = await getData({
+                "api": "doReq",
+                "usr": ge("username").value,
+                "pic": ge("picharge").value,
+                "adr": ge("address").value,
+                "grp": ge("groupname").value,
+                "hrm": ge("homeroom").value,
+                "led": ge("lendd").value,
+                "red": ge("returnd").value,
+                "itm": ge("lenditems").value
+            });
+            if (result) {
+                alert("送信されました")
+            }
+        }
+
+        window.onload = async () => {
+            items = await getData({"api": "getAvailableItems"});
         }
     </script>
 

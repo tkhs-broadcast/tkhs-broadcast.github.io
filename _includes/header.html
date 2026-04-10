@@ -8,12 +8,14 @@
         }
         try {
             const response = await fetch(url + data);
-            if (!response.ok) {
-                throw new Error(`レスポンスステータス: ${response.status}`);
+            const response_text = JSON.parse(await response.text());
+            if (!!response_text.error) {
+                throw new Error(`レスポンスステータス: ${response_text.error}`);
             }
-            return await response.text()
+            return response_text
         } catch (error) {
-            return alert("error")
+            alert("error");
+            return false
         }
     }
 
